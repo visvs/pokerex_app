@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { Col } from 'antd';
 import Searcher from './components/Searcher';
 import PokemonList from './components/PokemonList';
-import { getPokemon } from './api';
+import { getPokemon, getPokemonDetail } from './api';
 import { setPokemons } from './actions';
 import logo from './statics/logo.svg';
 import { useDispatch, useSelector } from 'react-redux';
@@ -18,11 +18,15 @@ function App() {
   useEffect(() => {
     const fetchPokemons = async () => {
       const pokemonsRes = await getPokemon();
-      dispatcher(setPokemons(pokemonsRes));
+      const pokemonDetails = await Promise.all(pokemonsRes.map(getPokemonDetail));
+      dispatcher(setPokemons(pokemonDetails));
+
     };
 
     fetchPokemons();
   }, []);
+
+ 
 
   return (
     <div className='App'>
