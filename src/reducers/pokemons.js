@@ -25,6 +25,7 @@ export const pokemonsReducer = (state = initialState, action) => {
 
       newPokemonsList[currentPokemonIndex].favorite = !newPokemonsList[currentPokemonIndex].favorite;
 
+<<<<<<< HEAD
       return { ...state, pokemons: newPokemonsList } */
       const currentPokemonIndex = state.get('pokemons').findIndex((pokemon) => {
           return pokemon.get('id') === action.payload.pokemonId;
@@ -38,6 +39,11 @@ export const pokemonsReducer = (state = initialState, action) => {
     case SET_LOADING:
       //return { ...state, loading: action.payload };
       return setIn(state ,["loading"], fromJS(action.payload))
+=======
+      return { ...state, pokemons: newPokemonsList }
+    case SET_LOADING:
+      return { ...state, loading: action.payload };
+>>>>>>> 22445beedcc679a0756be0d5f091ae678520fa46
   default:
       return state;
   }
