@@ -1,26 +1,43 @@
 import { SET_FAVORITE, SET_LOADING, SET_POKEMONS } from '../actions/types';
+import { fromJS, setIn, getIn} from 'immutable';
 
-const initialState = {
+//Con fromJS ahora es una estructura inmutable 
+const initialState = fromJS({ 
   pokemons: [],
-  loading: false
-};
+  loading: false,
+});
 
 export const pokemonsReducer = (state = initialState, action) => {
   switch (action.type) {
     case SET_POKEMONS:
-      return { ...state, pokemons: action.payload };
-    case SET_LOADING:
-      return { ...state, loading: action.payload };
+      //return { ...state, pokemons: action.payload };
+      //return state.setIn(['pokemons'], fromJS(action.payload))
+      return setIn(state, ['pokemons'], fromJS(action.payload))
     case SET_FAVORITE:
-      const newPokemonList = [...state.pokemons];
-      const currentPokemonIndex = newPokemonList.findIndex((pokemon)=>{
-        return pokemon.id === action.payload.pokemonId
-      }); //Si no existe = -1
-      if(currentPokemonIndex < 0){
+      /* const newPokemonsList = [...state.pokemons];
+      const currentPokemonIndex = newPokemonsList.findIndex((pokemon) => {
+        return pokemon.id === action.payload.pokemonId;
+      });
+
+      if (currentPokemonIndex < 0) {
         return state;
       }
-      newPokemonList[currentPokemonIndex].favorite = !newPokemonList[currentPokemonIndex].favorite;
-      return {...state, pokemons: newPokemonList}
+
+      newPokemonsList[currentPokemonIndex].favorite = !newPokemonsList[currentPokemonIndex].favorite;
+
+      return { ...state, pokemons: newPokemonsList } */
+      const currentPokemonIndex = state.get('pokemons').findIndex((pokemon) => {
+          return pokemon.get('id') === action.payload.pokemonId;
+      });
+
+      if (currentPokemonIndex < 0) {
+        return state;
+      }
+      const isFav = getIn(state,['pokemons', currentPokemonIndex, 'favorite']);
+      return setIn(state,['pokemons', currentPokemonIndex, 'favorite'], !isFav)      
+    case SET_LOADING:
+      //return { ...state, loading: action.payload };
+      return setIn(state ,["loading"], fromJS(action.payload))
   default:
       return state;
   }
