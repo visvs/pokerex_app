@@ -9,6 +9,11 @@ export const getPokemon = () => {
 
 export const getPokemonDetail = (pokemon) =>{
     return axios.get(pokemon.url)
-    .then(res => res.data)
+    .then(res => {
+      const favorite = res.data.favorite ?? false
+      const rta = {...res.data, favorite}
+      console.log(rta)
+      return rta
+    })
     .catch(err =>console.log(err))
 }
