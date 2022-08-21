@@ -13,16 +13,16 @@ function App() {
   const pokemons = useSelector(state => state.pokemons)
   const loading = useSelector(state => state.loading)
 
-  const dispatcher = useDispatch();
+  const dispatch = useDispatch();
 
   //console.log("🚀 ~ file: App.js ~ line 12 ~ App ~ pokemons", pokemons)
   
   useEffect(() => {
     const fetchPokemons = async () => {
-      dispatcher(setLoading(true));
+      dispatch(setLoading(true));
       const pokemonsRes = await getPokemon();
-      dispatcher(getPokemonsWithDetails(pokemonsRes))
-      dispatcher(setLoading(false))
+      dispatch(getPokemonsWithDetails(pokemonsRes))
+      dispatch(setLoading(false))
     };
 
     fetchPokemons();
