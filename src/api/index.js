@@ -12,7 +12,6 @@ export const getPokemonDetail = (pokemon) =>{
     .then(res => {
       const favorite = res.data.favorite ?? false
       const rta = {...res.data, favorite}
-      console.log(rta)
       return rta
     })
     .catch(err =>console.log(err))
