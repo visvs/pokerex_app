@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App.hooks';
+import thunk from 'redux-thunk';
 //import App from './App.connect';
 import { pokemonsReducer } from './reducers/pokemons';
 import { Provider } from 'react-redux';
@@ -12,7 +13,12 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 //Compose nos sirve para encapsular todos los enhancers y middlewares que se quieran implementar
 //Para poder pasarle como parametro los middlewares creados, como logger en este caso,
 //se debe pasar primero por la funcion applyMiddleware como atributo
-const composeEnhencers = compose(window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(), applyMiddleware(logger))
+//Se crea un compose alternativo cuando se inplementa redux-thunk
+const composeAlt = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+const composeEnhencers = composeAlt(
+ /*  window.__REDUX_DEVTOOLS_EXTENSION__ && 
+  window.__REDUX_DEVTOOLS_EXTENSION__(), */ 
+  applyMiddleware(thunk,logger))
 
 const store = createStore(pokemonsReducer, composeEnhencers);
 

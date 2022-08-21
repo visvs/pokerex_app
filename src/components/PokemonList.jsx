@@ -2,7 +2,7 @@ import PokemonCard from './PokemonCard';
 
 const PokemonList = ({ pokemons }) => {
   const getPokemonAbilities = (abilities)=>{
-    console.log(abilities)
+    //console.log(abilities)
     return abilities.map(ability => ability.ability.name)
   }
   return (
