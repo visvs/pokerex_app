@@ -8,6 +8,7 @@ import { Provider } from 'react-redux';
 import {applyMiddleware, compose, legacy_createStore as createStore } from 'redux';
 import { logger } from './middlewares';
 import './index.css';
+import { rootReducer } from './reducers/root.reducer';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 //Compose nos sirve para encapsular todos los enhancers y middlewares que se quieran implementar
@@ -20,7 +21,7 @@ const composeEnhencers = composeAlt(
   window.__REDUX_DEVTOOLS_EXTENSION__(), */ 
   applyMiddleware(thunk,logger))
 
-const store = createStore(pokemonsReducer, composeEnhencers);
+const store = createStore(rootReducer, composeEnhencers);
 
 root.render(
   <React.StrictMode>
