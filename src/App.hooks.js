@@ -1,18 +1,28 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Col, Spin } from 'antd';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
-import Searcher from './components/Searcher';
+import {Searcher} from './components/Searcher';
 import PokemonList from './components/PokemonList';
-import { getPokemon } from './api';
-import { getPokemonsWithDetails, setLoading } from './actions';
+//import { getPokemon } from './api';
+//import { getPokemonsWithDetails, setLoading } from './actions';
 import logo from './statics/logo.svg';
 import './App.css';
-import { getIn } from 'immutable';
+//import { getIn } from 'immutable';
+import { fetchPokemonsWithDetails , setPokemons} from './slices/dataSlice';
+import { setLoading } from './slices/uiSlice';
 
 function App() {
   //const pokemons = useSelector((state) => state.pokemons);
-  const pokemons = useSelector((state) => getIn(state,['data', 'pokemons']), shallowEqual).toJS(); //Si no se pone ToJS Retorna a pokemons como una estructura de datos de immutable
-  const loading = useSelector((state) => getIn(state, ['ui', 'loading']));//useSelector((state) => state.loading);
+  //Con immutable
+  //const pokemons = useSelector((state) => getIn(state,['data', 'pokemons']), shallowEqual).toJS(); //Si no se pone ToJS Retorna a pokemons como una estructura de datos de immutable
+  
+  //Con Redux-Toolkit (SLICES)
+  const pokemons = useSelector((state) => state.data.pokemons, shallowEqual)
+  const loading = useSelector(state => state.ui.loading)
+  //useSelector((state) => getIn(state, ['ui', 'loading']));
+  //useSelector((state) => state.loading);
+  const [search, setSearch] = useState('')
+  const [pokeRender, setPokerender] = useState([])
   const dispatch = useDispatch();
   //Al usar useSelector usa una comparacion estricta ===
   /**
@@ -39,30 +49,47 @@ function App() {
    */
 
   useEffect(() => {
-    const fetchPokemons = async () => {
+    /* const fetchPokemons = async () => {
       dispatch(setLoading(true));
       const pokemonsRes = await getPokemon();
       dispatch(getPokemonsWithDetails(pokemonsRes));
       dispatch(setLoading(false));
     };
-
-    fetchPokemons();
+    fetchPokemons(); */    
+    dispatch(setLoading(true))
+    dispatch(fetchPokemonsWithDetails())    
+    dispatch(setLoading(false))
   }, []);
+
+   useEffect(() => {
+      setPokerender(pokemons)
+  }, [pokemons]);
+  const handleOnChange = (event)=>{ 
+    setSearch(event.target.value)   
+    if(event.target.value.length >= 1 && event.target.value.length !== '') {
+      const pokeTemp = pokemons.filter(poke => poke.name.toUpperCase().startsWith(event.target.value.toUpperCase()))
+      setPokerender(pokeTemp)
+    }else{
+      setPokerender(pokemons)   
+    }
+  }
 
   return (
     <div className='App'>
       <Col span={4} offset={10}>
         <img src={logo} alt='Pokedux' />
-      </Col>
-      <Col span={8} offset={8}>
-        <Searcher />
-      </Col>
+      </Col>      
       {loading ? (
         <Col offset={12}>
           <Spin spinning size='large' />
         </Col>
       ) : (
-        <PokemonList pokemons={pokemons} />
+        <>
+        <Col span={8} offset={8}>
+          <Searcher searchWord={search} onChange={handleOnChange}/>
+        </Col>
+        <PokemonList pokemons={pokeRender} />
+        </>
       )}
     </div>
   );

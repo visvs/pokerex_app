@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 import App from './App.hooks';
 import thunk from 'redux-thunk';
 //import App from './App.connect';
-import { pokemonsReducer } from './reducers/pokemons';
+//import { pokemonsReducer } from './reducers/pokemons';
 import { Provider } from 'react-redux';
 import {applyMiddleware, compose, legacy_createStore as createStore } from 'redux';
 import { logger } from './middlewares';
@@ -19,7 +19,7 @@ const composeAlt = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const composeEnhencers = composeAlt(
  /*  window.__REDUX_DEVTOOLS_EXTENSION__ && 
   window.__REDUX_DEVTOOLS_EXTENSION__(), */ 
-  applyMiddleware(thunk,logger))
+  applyMiddleware(thunk,logger));
 
 const store = createStore(rootReducer, composeEnhencers);
 
